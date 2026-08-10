@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shalev Turgeman — Embedded Software Engineer</title>
+<meta name="description" content="Portfolio of Shalev Turgeman — Embedded Software Engineer. Bare-metal C on ARM Cortex-M (STM32), full-stack projects, and more.">
+<meta property="og:title" content="Shalev Turgeman — Embedded Software Engineer">
+<meta property="og:description" content="Bare-metal STM32 projects, VR simulation, distributed systems — portfolio & contact.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2310151C'/%3E%3Ctext x='32' y='42' font-family='Consolas,monospace' font-size='28' font-weight='bold' fill='%2335C4B5' text-anchor='middle'%3EST%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #10151C;
+    --bg-soft: #161D27;
+    --card: #1A2230;
+    --line: #263242;
+    --ink: #E8ECF1;
+    --ink-soft: #9AA7B8;
+    --accent: #35C4B5;
+    --accent-dim: #1E6D66;
+    --amber: #D9A552;
+    --mono: Consolas, "Courier New", monospace;
+    --sans: "Segoe UI", system-ui, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+  html[data-lang="he"] body { direction: rtl; }
+
+  .lang-he { display: none; }
+  html[data-lang="he"] .lang-he { display: inline; }
+  html[data-lang="he"] .lang-en { display: none; }
+  html[data-lang="he"] .lang-he.block, html[data-lang="en"] .lang-en.block { display: block; }
+
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 22px; }
+
+  /* ===== nav ===== */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(16,21,28,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; flex-wrap: wrap; gap: 6px; }
+  .logo { font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 18px; text-decoration: none; }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14.5px; }
+  .nav-links a:hover { color: var(--accent); }
+  .lang-btn {
+    font: inherit; font-size: 13.5px; cursor: pointer; font-family: var(--mono);
+    background: none; border: 1px solid var(--line); color: var(--ink-soft);
+    border-radius: 8px; padding: 4px 12px;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn:focus-visible, a:focus-visible, .proj summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ===== hero ===== */
+  .hero { padding: 72px 0 56px; display: flex; align-items: center; gap: 44px; flex-wrap: wrap; }
+  .hero-text { flex: 1 1 420px; min-width: 0; }
+  .kicker { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; }
+  h1 { font-size: clamp(30px, 5.5vw, 46px); line-height: 1.15; letter-spacing: -0.5px; }
+  .role { color: var(--ink-soft); font-size: clamp(16px, 2.6vw, 20px); margin-top: 8px; }
+  .terminal {
+    font-family: var(--mono); font-size: 14px; color: var(--amber);
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 16px; margin-top: 22px; display: block; width: fit-content;
+    direction: ltr; text-align: left; max-width: 100%; overflow-x: auto; white-space: nowrap;
+  }
+  .terminal .prompt { color: var(--accent); }
+  .cursor { display: inline-block; width: 8px; background: var(--amber); animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } html { scroll-behavior: auto; } }
+  .cta-row { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    text-decoration: none; font-size: 14.5px; border-radius: 10px; padding: 10px 20px;
+    border: 1px solid var(--line); color: var(--ink);
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #08211E; font-weight: 700; }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .btn:not(.primary):hover { border-color: var(--accent); color: var(--accent); }
+  .avatar-box { flex: 0 0 auto; }
+  .avatar, .avatar-fallback {
+    width: 190px; height: 190px; border-radius: 50%;
+    border: 3px solid var(--accent-dim); object-fit: cover;
+  }
+  .avatar-fallback {
+    display: none; align-items: center; justify-content: center;
+    background: var(--bg-soft); font-family: var(--mono); font-size: 56px; font-weight: 700; color: var(--accent);
+  }
+
+  /* ===== sections ===== */
+  section { padding: 44px 0; border-top: 1px solid var(--line); }
+  .sec-label { font-family: var(--mono); color: var(--accent); font-size: 15px; margin-bottom: 18px; direction: ltr; }
+  html[data-lang="he"] .sec-label { text-align: right; }
+  .about-text { max-width: 68ch; color: var(--ink); font-size: 16.5px; }
+  .about-text p + p { margin-top: 10px; }
+
+  /* skills */
+  .skill-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .skill-group { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .skill-group h3 { font-size: 14px; font-family: var(--mono); color: var(--amber); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-size: 13px; background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 999px; padding: 3px 12px; color: var(--ink-soft);
+    direction: ltr; unicode-bidi: isolate;
+  }
+
+  /* projects */
+  .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .proj-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) {
+    .nav-links { gap: 11px; }
+    .nav-links a { font-size: 13px; }
+    .hero { padding: 46px 0 38px; gap: 28px; }
+    .avatar, .avatar-fallback { width: 150px; height: 150px; }
+  }
+  .proj {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .proj.flagship { grid-column: 1 / -1; border-color: var(--accent-dim); }
+  .proj-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .proj h3 { font-size: 18.5px; }
+  .badge {
+    font-size: 11.5px; font-family: var(--mono); border-radius: 999px; padding: 2px 10px; white-space: nowrap;
+    background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .badge.star { color: var(--amber); border-color: var(--amber); }
+  .badge.live { color: var(--accent); border-color: var(--accent); }
+  .proj-desc { color: var(--ink-soft); font-size: 14.8px; }
+  .proj details { border-top: 1px dashed var(--line); padding-top: 10px; }
+  .proj summary { cursor: pointer; font-family: var(--mono); font-size: 13px; color: var(--accent); list-style: none; }
+  .proj summary::before { content: "> "; }
+  .proj details[open] summary::before { content: "v "; }
+  .proj details ul { margin: 10px 0 4px; padding-inline-start: 20px; color: var(--ink-soft); font-size: 14px; }
+  .proj details li { margin-bottom: 5px; }
+  .proj-links { display: flex; gap: 14px; margin-top: auto; padding-top: 6px; flex-wrap: wrap; }
+  .proj-links a { font-family: var(--mono); font-size: 13.5px; color: var(--accent); text-decoration: none; }
+  .proj-links a:hover { text-decoration: underline; }
+  .proj-links .muted { font-family: var(--mono); font-size: 13.5px; color: var(--ink-soft); }
+
+  /* contact */
+  .contact-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .contact-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 22px; text-decoration: none; color: var(--ink);
+    display: flex; flex-direction: column; gap: 2px; min-width: 220px;
+  }
+  .contact-card:hover { border-color: var(--accent); }
+  .contact-card .k { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+  .contact-card .v { font-size: 15px; direction: ltr; text-align: left; }
+  html[data-lang="he"] .contact-card .v { text-align: right; }
+
+  footer { border-top: 1px solid var(--line); padding: 22px 0 34px; color: var(--ink-soft); font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .mono { font-family: var(--mono); direction: ltr; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top">ST</a>
+    <div class="nav-links">
+      <a href="#about"><span class="lang-en">About</span><span class="lang-he">עליי</span></a>
+      <a href="#skills"><span class="lang-en">Skills</span><span class="lang-he">כישורים</span></a>
+      <a href="#projects"><span class="lang-en">Projects</span><span class="lang-he">פרויקטים</span></a>
+      <a href="#contact"><span class="lang-en">Contact</span><span class="lang-he">יצירת קשר</span></a>
+      <button class="lang-btn" id="langToggle" aria-label="Switch language">עברית</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap" id="top">
+  <div class="hero-text">
+    <div class="kicker">// embedded software engineer</div>
+    <h1><span class="lang-en">Shalev Turgeman</span><span class="lang-he">שלו תורג'מן</span></h1>
+    <p class="role">
+      <span class="lang-en">B.Sc. Software Engineering · Bare-metal C on ARM Cortex-M · Available for junior positions</span>
+      <span class="lang-he">בוגר הנדסת תוכנה · ‏Bare-metal C על ARM Cortex-M · זמין למשרות ג'וניור</span>
+    </p>
+    <div class="terminal"><span class="prompt">st@stm32f407:~$</span> <span id="typed"></span><span class="cursor">&nbsp;</span></div>
+    <div class="cta-row">
+      <a class="btn primary" href="https://github.com/shalevT11" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="btn" href="mailto:shalevturjeman14@gmail.com"><span class="lang-en">Email me</span><span class="lang-he">שלחו לי מייל</span></a>
+      <a class="btn" href="#projects"><span class="lang-en">See my work</span><span class="lang-he">לתיק העבודות</span></a>
+    </div>
+  </div>
+  <div class="avatar-box">
+    <img class="avatar" src="assets/profile.jpg" alt="Shalev Turgeman"
+         onerror="this.style.display='none'; document.getElementById('avatarFb').style.display='flex';">
+    <div class="avatar-fallback" id="avatarFb">ST</div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-label">// about</div>
+    <div class="about-text">
+      <div class="lang-en block">
+        <p>I'm a Software Engineering graduate (B.Sc., Kinneret College, 2026 — GPA 87.96) focused on <b>embedded software</b>: bare-metal C on ARM Cortex-M, programming STM32 peripherals directly at the register level — no HAL, no shortcuts.</p>
+        <p>Before my degree I served in the Israeli Air Force as a guided-weapons technician at Ramat David Airbase, where I first fell for systems where software meets real hardware — and earned a Military Excellence Award along the way.</p>
+        <p>Beyond embedded, I've built full-stack projects in Java, Android and Node.js, managed AWS infrastructure at the Kinneret Innovation Center, and shipped a multiplayer VR simulation as my final degree project. I'm available immediately for junior embedded / software positions in northern &amp; central Israel.</p>
+      </div>
+      <div class="lang-he block">
+        <p>בוגר הנדסת תוכנה (מכללת כנרת, 2026 — ממוצע 87.96) עם התמחות ב<b>תוכנה משובצת</b>: ‏bare-metal C על ARM Cortex-M, תכנות פריפריות STM32 ישירות ברמת הרגיסטרים — בלי HAL ובלי קיצורי דרך.</p>
+        <p>לפני התואר שירתתי בחיל האוויר כטכנאי חימוש מונחה בבסיס רמת דוד — שם התאהבתי במערכות שבהן תוכנה פוגשת חומרה אמיתית, וקיבלתי הצטיינות מפקד.</p>
+        <p>מעבר ל-embedded בניתי פרויקטים full-stack ב-Java, ‏Android ו-Node.js, ניהלתי תשתיות AWS במרכז החדשנות כנרת, ופיתחתי סימולציית VR מרובת-משתתפים כפרויקט הגמר. זמין מיידית למשרות ג'וניור בצפון ובמרכז.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-label">// skills</div>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <h3>EMBEDDED</h3>
+        <div class="chips">
+          <span class="chip">STM32 / Cortex-M4</span><span class="chip">Bare-metal C</span>
+          <span class="chip">Memory-mapped registers</span><span class="chip">Interrupts / ISRs</span>
+          <span class="chip">SWD / ITM debugging</span><span class="chip">STM32CubeIDE</span>
+          <span class="chip">arm-none-eabi-gcc</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>PROGRAMMING</h3>
+        <div class="chips">
+          <span class="chip">C</span><span class="chip">C++</span><span class="chip">Assembly</span>
+          <span class="chip">Python</span><span class="chip">Java</span><span class="chip">JavaScript / Node.js</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>WEB &amp; CLOUD</h3>
+        <div class="chips">
+          <span class="chip">AWS</span><span class="chip">Linux</span><span class="chip">Express / Sequelize</span>
+          <span class="chip">Android (MVVM)</span><span class="chip">HTML / CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>DATA &amp; TOOLS</h3>
+        <div class="chips">
+          <span class="chip">MySQL</span><span class="chip">SQL Server</span><span class="chip">Room / SQLite</span>
+          <span class="chip">Git / GitHub</span><span class="chip">Maven / Gradle</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-label">// projects</div>
+    <div class="proj-grid">
+
+      <article class="proj flagship">
+        <div class="proj-head">
+          <h3><span class="lang-en">Bare-Metal STM32F407 Programming</span><span class="lang-he">‏Bare-Metal STM32F407</span></h3>
+          <span class="badge star">★ <span class="lang-en">flagship</span><span class="lang-he">פרויקט דגל</span></span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">Register-level embedded C on the STM32F407G-DISC1 — no HAL, no libraries. Every peripheral configured by writing directly to memory-mapped registers, with addresses taken from the STM32F4xx reference manual.</span>
+          <span class="lang-he">תכנות embedded ברמת הרגיסטרים על STM32F407G-DISC1 — בלי HAL ובלי ספריות. כל פריפריה מוגדרת בכתיבה ישירה לרגיסטרים ממופי-זיכרון, עם כתובות מה-Reference Manual.</span>
+        </p>
+        <details>
+          <summary><span class="lang-en">what's inside</span><span class="lang-he">מה יש בפנים</span></summary>
+          <ul>
+            <li><span class="lang-en">Five self-contained projects: GPIO output, LED toggle, pin read, button interrupts, and target-side type analysis.</span><span class="lang-he">חמישה פרויקטים עצמאיים: פלט GPIO, הבהוב LED, קריאת פין, פסיקות כפתור וניתוח טיפוסים על ה-target.</span></li>
+            <li><span class="lang-en">Full interrupt chain implemented by hand: SYSCFG routing → EXTI edge config → NVIC enable → ISR with a volatile flag and software debounce.</span><span class="lang-he">שרשרת פסיקות מלאה ביד: ניתוב SYSCFG ← קונפיגורציית EXTI ← ‏NVIC ← ‏ISR עם דגל volatile ו-debounce תוכנתי.</span></li>
+            <li><span class="lang-en">Extended beyond the course exercises: rotating 4-LED pattern per button press, and a custom __io_putchar for printf over ITM/SWO.</span><span class="lang-he">הרחבות מעבר לתרגילי הקורס: סבב 4 לדים בכל לחיצה, ו-__io_putchar משלי ל-printf דרך ITM/SWO.</span></li>
+            <li><span class="lang-en">ELF analysis with GNU tools (objdump, size) and instruction-level debugging.</span><span class="lang-he">ניתוח ELF עם כלי GNU ‏(objdump, ‏size) ודיבאג ברמת ההוראה.</span></li>
+          </ul>
+        </details>
+        <div class="chips"><span class="chip">C</span><span class="chip">ARM Cortex-M4</span><span class="chip">STM32CubeIDE</span><span class="chip">SWD / ITM</span><span class="chip">Linker scripts</span></div>
+        <div class="proj-links"><a href="https://github.com/shalevT11/stm32f407-bare-metal" target="_blank" rel="noopener">github ↗</a></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3>WaterVision VR</h3>
+          <span class="badge"><span class="lang-en">B.Sc. final project</span><span class="lang-he">פרויקט גמר</span></span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">Multiplayer VR walkthrough of a wastewater-treatment plant in Unity — modeling the real Beit She'an facility and its process stages (clarifiers, scraper bridges) for visualization and training.</span>
+          <span class="lang-he">סיור VR מרובה-משתתפים במתקן טיהור שפכים ב-Unity — מדמה את המתקן האמיתי בבית שאן ואת שלבי התהליך שלו, להמחשה והדרכה.</span>
+        </p>
+        <div class="chips"><span class="chip">Unity</span><span class="chip">C#</span><span class="chip">VR</span><span class="chip">Multiplayer</span></div>
+        <div class="proj-links"><span class="muted"><span class="lang-en">code available on request</span><span class="lang-he">קוד זמין לפי בקשה</span></span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3>MoveIt Fitness</h3>
+          <span class="badge"><span class="lang-en">full-stack</span><span class="lang-he">‏full-stack</span></span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">Android fitness-coaching app with Coach/Trainee roles — lesson management, media content and progress tracking — built on MVVM with Room, LiveData and Espresso tests, backed by a layered Node.js/Express/Sequelize API.</span>
+          <span class="lang-he">אפליקציית אימונים לאנדרואיד עם תפקידי מאמן/מתאמן — ניהול שיעורים, תוכן מדיה ומעקב התקדמות — בארכיטקטורת MVVM עם Room, ‏LiveData ובדיקות Espresso, מעל שרת Node.js/Express/Sequelize.</span>
+        </p>
+        <details>
+          <summary><span class="lang-en">what's inside</span><span class="lang-he">מה יש בפנים</span></summary>
+          <ul>
+            <li><span class="lang-en">20 Java classes in clean MVVM layers: entities, DAOs, repositories, ViewModels and 8 activities.</span><span class="lang-he">‏20 מחלקות Java בשכבות MVVM נקיות: ‏entities, ‏DAOs, ‏repositories, ‏ViewModels ו-8 מסכים.</span></li>
+            <li><span class="lang-en">Instrumented UI tests (Espresso) plus full academic docs: SRS, design document and test document.</span><span class="lang-he">בדיקות UI ‏(Espresso) + תיעוד מלא: ‏SRS, מסמך עיצוב ומסמך בדיקות.</span></li>
+            <li><span class="lang-en">Backend: 7 REST resources in a routes → controllers → services → models architecture over MySQL.</span><span class="lang-he">צד שרת: ‏7 משאבי REST בארכיטקטורת routes ← controllers ← services ← models מעל MySQL.</span></li>
+          </ul>
+        </details>
+        <div class="chips"><span class="chip">Java</span><span class="chip">Android</span><span class="chip">Room</span><span class="chip">Node.js</span><span class="chip">MySQL</span></div>
+        <div class="proj-links"><a href="https://github.com/shalevT11/MoveIt-Fitness-App" target="_blank" rel="noopener">github ↗</a></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3><span class="lang-en">Mulligan — Distributed Parking</span><span class="lang-he">‏Mulligan — חניה מבוזרת</span></h3>
+          <span class="badge"><span class="lang-en">distributed systems</span><span class="lang-he">מערכות מבוזרות</span></span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">Team-built parking management platform deployed across a 9-machine LAN — MySQL data layer, distributed Java services, and a Raft-replicated recommendation service for fault tolerance.</span>
+          <span class="lang-he">פלטפורמת ניהול חניה שנבנתה בצוות ונפרסה על 9 מכונות ברשת — שכבת נתונים MySQL, שירותי Java מבוזרים, ושירות המלצות משוכפל ב-Raft לעמידות בתקלות.</span>
+        </p>
+        <div class="chips"><span class="chip">Java</span><span class="chip">Raft</span><span class="chip">MySQL</span><span class="chip">Multi-node</span></div>
+        <div class="proj-links"><span class="muted"><span class="lang-en">academic repo (private)</span><span class="lang-he">ריפו אקדמי (פרטי)</span></span></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3><span class="lang-en">Greenhouse Control System</span><span class="lang-he">מערכת בקרת חממות</span></h3>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">JavaFX desktop tool for a greenhouse-film production plant — querying logged sensor data from MySQL: date ranges, extreme values and anomaly lookups.</span>
+          <span class="lang-he">כלי שולחני ב-JavaFX למפעל יריעות חממה — שאילתות על נתוני חיישנים מ-MySQL: טווחי תאריכים, ערכי קיצון ואיתור חריגות.</span>
+        </p>
+        <div class="chips"><span class="chip">Java</span><span class="chip">JavaFX</span><span class="chip">MySQL</span><span class="chip">Maven</span></div>
+        <div class="proj-links"><a href="https://github.com/shalevT11/GreenhouseControlSystem" target="_blank" rel="noopener">github ↗</a></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3><span class="lang-en">Embedded Jobs Board</span><span class="lang-he">לוח משרות Embedded</span></h3>
+          <span class="badge live">● live</span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">A live job board for junior embedded roles in Israel — a static GitHub Pages site whose dataset is maintained by a daily AI agent: searching sources, verifying links, and committing updates autonomously.</span>
+          <span class="lang-he">לוח משרות חי לתפקידי embedded ג'וניור בישראל — אתר GitHub Pages סטטי שהנתונים שלו מתוחזקים על ידי סוכן AI יומי: חיפוש במקורות, אימות קישורים ודחיפת עדכונים אוטונומית.</span>
+        </p>
+        <div class="chips"><span class="chip">JavaScript</span><span class="chip">GitHub Pages</span><span class="chip">AI automation</span></div>
+        <div class="proj-links">
+          <a href="https://shalevt11.github.io/embedded-jobs-board/" target="_blank" rel="noopener">live ↗</a>
+          <a href="https://github.com/shalevT11/embedded-jobs-board" target="_blank" rel="noopener">github ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-label">// contact</div>
+    <p class="about-text">
+      <span class="lang-en">Looking for a junior embedded engineer? I'd love to hear from you.</span>
+      <span class="lang-he">מחפשים מהנדס embedded ג'וניור? אשמח לשמוע מכם.</span>
+    </p>
+    <div class="contact-row">
+      <a class="contact-card" href="mailto:shalevturjeman14@gmail.com">
+        <span class="k">// email</span><span class="v">shalevturjeman14@gmail.com</span>
+      </a>
+      <a class="contact-card" href="https://github.com/shalevT11" target="_blank" rel="noopener">
+        <span class="k">// github</span><span class="v">github.com/shalevT11</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Shalev Turgeman</span>
+    <span class="mono">while(1) { learn(); build(); }</span>
+  </div>
+</footer>
+
+<script>
+  /* ===== language toggle ===== */
+  const btn = document.getElementById('langToggle');
+  function setLang(lang) {
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'he' ? 'rtl' : 'ltr');
+    btn.textContent = lang === 'he' ? 'English' : 'עברית';
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+  btn.addEventListener('click', () => {
+    setLang(document.documentElement.getAttribute('data-lang') === 'he' ? 'en' : 'he');
+  });
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  if (urlLang === 'he' || urlLang === 'en') { setLang(urlLang); }
+  else { try { const saved = localStorage.getItem('lang'); if (saved) setLang(saved); } catch (e) {} }
+
+  /* ===== typed terminal line ===== */
+  const lines = [
+    '*pGPIOD_ODR |= (1 << 12);   // hello, world',
+    '*pRCC_AHB1ENR |= (1 << 3);  // clocks first!',
+    'while (!(*pISR & TXE));     // patience...',
+    'git push origin main        // ship it'
+  ];
+  const typedEl = document.getElementById('typed');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    typedEl.textContent = lines[0];
+  } else {
+    let li = 0, ci = 0, deleting = false;
+    (function tick() {
+      const line = lines[li];
+      typedEl.textContent = line.slice(0, ci);
+      let delay = 45;
+      if (!deleting && ci < line.length) { ci++; }
+      else if (!deleting) { deleting = true; delay = 2600; }
+      else if (ci > 0) { ci--; delay = 14; }
+      else { deleting = false; li = (li + 1) % lines.length; delay = 400; }
+      setTimeout(tick, delay);
+    })();
+  }
+</script>
+</body>
+</html>
