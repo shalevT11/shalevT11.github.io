@@ -149,6 +149,7 @@
     border-color: var(--accent); box-shadow: 0 16px 34px rgba(0,0,0,0.38);
   }
   .proj.flagship { grid-column: 1 / -1; border-color: var(--accent-dim); }
+  .proj-video { width: 100%; max-height: 420px; object-fit: contain; border-radius: 10px; margin: 2px 0 4px; display: block; background: #0b0f14; }
   .proj-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .proj h3 { font-size: 18.5px; }
   .badge {
@@ -293,6 +294,9 @@
           <h3><span class="lang-en">ESP32 + Azure IoT — Predictive Maintenance</span><span class="lang-he">‏ESP32 + Azure IoT — ניטור מנבא</span></h3>
           <span class="badge star">★ <span class="lang-en">flagship</span><span class="lang-he">פרויקט דגל</span></span>
         </div>
+        <video class="proj-video" autoplay loop muted playsinline preload="metadata" poster="assets/esp32-poster.jpg">
+          <source src="assets/esp32-demo.mp4" type="video/mp4">
+        </video>
         <p class="proj-desc">
           <span class="lang-en">End-to-end IoT system — hardware to cloud: an ESP32 reads an ICM-20948 IMU over I2C at the register level, streams telemetry to Azure IoT Hub over MQTT/TLS, and a NestJS + Next.js dashboard visualizes it live with z-score anomaly detection.</span>
           <span class="lang-he">מערכת IoT מקצה-לקצה — מהחומרה ועד הענן: ‏ESP32 קורא חיישן IMU‏ (ICM-20948) ב-I2C ברמת הרגיסטרים, משדר טלמטריה ל-Azure IoT Hub ב-MQTT/TLS, ודאשבורד NestJS + Next.js מציג בזמן אמת עם זיהוי אנומליות z-score.</span>
