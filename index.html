@@ -290,8 +290,30 @@
 
       <article class="proj flagship">
         <div class="proj-head">
-          <h3><span class="lang-en">Bare-Metal STM32F407 Programming</span><span class="lang-he">‏Bare-Metal STM32F407</span></h3>
+          <h3><span class="lang-en">ESP32 + Azure IoT — Predictive Maintenance</span><span class="lang-he">‏ESP32 + Azure IoT — ניטור מנבא</span></h3>
           <span class="badge star">★ <span class="lang-en">flagship</span><span class="lang-he">פרויקט דגל</span></span>
+        </div>
+        <p class="proj-desc">
+          <span class="lang-en">End-to-end IoT system — hardware to cloud: an ESP32 reads an ICM-20948 IMU over I2C at the register level, streams telemetry to Azure IoT Hub over MQTT/TLS, and a NestJS + Next.js dashboard visualizes it live with z-score anomaly detection.</span>
+          <span class="lang-he">מערכת IoT מקצה-לקצה — מהחומרה ועד הענן: ‏ESP32 קורא חיישן IMU‏ (ICM-20948) ב-I2C ברמת הרגיסטרים, משדר טלמטריה ל-Azure IoT Hub ב-MQTT/TLS, ודאשבורד NestJS + Next.js מציג בזמן אמת עם זיהוי אנומליות z-score.</span>
+        </p>
+        <details>
+          <summary><span class="lang-en">what's inside</span><span class="lang-he">מה יש בפנים</span></summary>
+          <ul>
+            <li><span class="lang-en">Firmware (ESP-IDF, FreeRTOS): register-level I2C bring-up — bus scan, WHO_AM_I, read-modify-write wake, 14-byte burst reads (accel + gyro + temp), int16 / 2's-complement decoding.</span><span class="lang-he">‏Firmware ‏(ESP-IDF, ‏FreeRTOS): הבאת חיישן ב-I2C ברמת הרגיסטר — ‏bus scan, ‏WHO_AM_I, ‏read-modify-write, קריאת burst של 14 בייט (תאוצה + גירו + טמפ'), פענוח int16 / 2's-complement.</span></li>
+            <li><span class="lang-en">Networking on embedded: WiFi station mode, SNTP time sync, and MQTT over TLS with SAS-token (HMAC-SHA256) auth to Azure IoT Hub.</span><span class="lang-he">רשת על embedded: ‏WiFi station mode, סנכרון שעון ב-SNTP, ו-MQTT over TLS עם אימות SAS-token‏ (HMAC-SHA256) ל-Azure IoT Hub.</span></li>
+            <li><span class="lang-en">Engineering judgment: samples fast (5 Hz) but transmits only each window's peak — catching transients while staying inside the cloud free-tier quota.</span><span class="lang-he">שיקול הנדסי: דוגם מהר (5Hz) אך משדר רק את ה-peak של כל חלון — תופס transients בלי לחרוג ממכסת ה-free tier.</span></li>
+            <li><span class="lang-en">Cloud + full-stack: a NestJS consumer pulls from IoT Hub → WebSockets → a Next.js / Recharts dashboard with rolling z-score anomaly detection. Green CI builds firmware + backend.</span><span class="lang-he">ענן + full-stack: ‏NestJS צורך מ-IoT Hub ← ‏WebSockets ← דאשבורד Next.js / Recharts עם זיהוי אנומליות z-score. ‏CI ירוק בונה firmware + backend.</span></li>
+          </ul>
+        </details>
+        <div class="chips"><span class="chip">ESP32</span><span class="chip">FreeRTOS</span><span class="chip">C</span><span class="chip">I2C</span><span class="chip">Azure IoT</span><span class="chip">MQTT/TLS</span><span class="chip">NestJS</span><span class="chip">React</span></div>
+        <div class="proj-links"><a href="https://github.com/shalevT11/esp32-azure-predictive-maintenance" target="_blank" rel="noopener">github ↗</a></div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3><span class="lang-en">Bare-Metal STM32F407 Programming</span><span class="lang-he">‏Bare-Metal STM32F407</span></h3>
+          <span class="badge"><span class="lang-en">bare-metal C</span><span class="lang-he">‏bare-metal C</span></span>
         </div>
         <p class="proj-desc">
           <span class="lang-en">Register-level embedded C on the STM32F407G-DISC1 — no HAL, no libraries. Every peripheral configured by writing directly to memory-mapped registers, with addresses taken from the STM32F4xx reference manual.</span>
